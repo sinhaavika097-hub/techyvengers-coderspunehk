@@ -1,0 +1,12 @@
+# Binaries & executables
+*.exe
+*.o
+*.obj
+*.db
+*.zip
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

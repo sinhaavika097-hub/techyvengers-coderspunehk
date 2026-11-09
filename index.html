@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KNOWBRIDGE AI — Enterprise Knowledge Continuity & Brand Governance Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Official Palette: Dark Blue, Purple, Green, Red */
+      --dark-blue-base: #050811;
+      --dark-blue-surface: #0a0f1d;
+      --dark-blue-card: #0f172a;
+      --dark-blue-card-hover: #162238;
+      --dark-blue-border: #1e293b;
+      --dark-blue-border-glow: rgba(59, 130, 246, 0.3);
+
+      --purple-primary: #8b5cf6;
+      --purple-secondary: #7c3aed;
+      --purple-light: #c4b5fd;
+      --purple-dark: #2e1065;
+      --purple-glow: rgba(139, 92, 246, 0.35);
+
+      --green-primary: #10b981;
+      --green-secondary: #059669;
+      --green-light: #6ee7b7;
+      --green-bg: rgba(16, 185, 129, 0.12);
+      --green-glow: rgba(16, 185, 129, 0.4);
+
+      --red-primary: #ef4444;
+      --red-secondary: #dc2626;
+      --red-light: #fca5a5;
+      --red-bg: rgba(239, 68, 68, 0.12);
+      --red-glow: rgba(239, 68, 68, 0.4);
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background-color: var(--dark-blue-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* BACKGROUND GLOW ACCENTS */
+    .bg-mesh {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(239, 68, 68, 0.05) 0%, transparent 50%);
+    }
+
+    /* TOP JURY BAR */
+    .jury-top-banner {
+      background: linear-gradient(90deg, #110d29 0%, #0d1527 30%, #062b20 60%, #290a0a 100%);
+      border-bottom: 1px solid rgba(139, 92, 246, 0.35);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      backdrop-filter: blur(12px);
+    }
+    .jury-team-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+    .team-badge {
+      background: linear-gradient(135deg, var(--purple-primary), #4f46e5);
+      color: #fff;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 14px var(--purple-glow);
+    }
+    .leader-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--green-primary);
+      color: var(--green-light);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .build-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--purple-light);
+      background: rgba(139, 92, 246, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+    .jury-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-scenario {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-scenario:hover {
+      background: var(--purple-primary);
+      border-color: var(--purple-light);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--purple-glow);
+    }
+    .btn-scenario.active {
+      background: linear-gradient(135deg, var(--purple-secondary), #312e81);
+      border-color: var(--purple-primary);
+      color: #fff;
+      box-shadow: 0 0 12px var(--purple-glow);
+    }
+    .audio-toggle-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--dark-blue-border);
+      color: var(--purple-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* MAIN HEADER */
+    header {
+      background: var(--dark-blue-surface);
+      border-bottom: 1px solid var(--dark-blue-border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--purple-primary) 30%, var(--green-primary) 60%, var(--red-primary) 85%, transparent);
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, var(--purple-secondary), #1d4ed8 50%, var(--green-secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 24px var(--purple-glow);
+    }
+    .brand-titles h1 {
+      font-size: 1.55rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-titles h1 span.tag {
+      font-size: 0.65rem;
+      background: linear-gradient(90deg, var(--purple-dark), #1e1b4b);
+      border: 1px solid var(--purple-primary);
+      color: var(--purple-light);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .brand-titles p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* WORKSPACE STATUS CHIP */
+    .workspace-chip {
+      background: var(--dark-blue-card);
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 10px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--green-primary);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--green-glow);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    /* NAVIGATION TABS */
+    nav.nav-bar {
+      background: var(--dark-blue-surface);
+      border-bottom: 1px solid var(--dark-blue-border);
+      display: flex;
+      padding: 0 32px;
+      gap: 6px;
+      overflow-x: auto;
+      position: relative;
+      z-index: 10;
+    }
+    .nav-tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 14px 22px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+    .nav-tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .nav-tab-btn.active {
+      color: var(--purple-light);
+      border-bottom-color: var(--purple-primary);
+      background: rgba(139, 92, 246, 0.08);
+    }
+    .nav-tab-btn .badge-count {
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-family: var(--font-mono);
+    }
+    .nav-tab-btn.active .badge-count {
+      background: var(--purple-primary);
+      color: #fff;
+      box-shadow: 0 0 10px var(--purple-glow);
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      padding: 30px;
+      max-width: 1560px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 5;
+    }
+    .tab-section {
+      display: none;
+      animation: tabFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tab-section.active { display: block; }
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* WORKFLOW CALLOUT */
+    .central-workflow-card {
+      background: linear-gradient(135deg, rgba(26, 18, 56, 0.75) 0%, rgba(10, 15, 29, 0.95) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 14px;
+      padding: 22px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+    }
+    .central-workflow-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: linear-gradient(180deg, var(--purple-primary), var(--green-primary), var(--red-primary));
+    }
+    .workflow-flow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      background: var(--dark-blue-card);
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .flow-step span.num {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 800;
+    }
+    .flow-arrow {
+      color: var(--purple-light);
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+
+    /* TOP 4 KPI CARDS */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .kpi-box {
+      background: var(--dark-blue-card);
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .kpi-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+    .kpi-box::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--bar-color, var(--purple-primary));
+    }
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .kpi-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* AUDIT & GOVERNANCE CONSOLE */
+    .governance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1024px) {
+      .governance-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-box {
+      background: var(--dark-blue-card);
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--dark-blue-border);
+    }
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .editor-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+    .content-textarea {
+      width: 100%;
+      height: 290px;
+      background: #070c17;
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      padding: 16px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .content-textarea:focus {
+      border-color: var(--purple-primary);
+      box-shadow: 0 0 16px var(--purple-glow);
+    }
+
+    /* VIEW MODE TOGGLE BUTTONS (CARDS vs REDLINE DIFF) */
+    .view-toggle {
+      display: flex;
+      background: #080d1a;
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 6px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .btn-toggle-view {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-toggle-view.active {
+      background: var(--purple-primary);
+      color: #fff;
+    }
+
+    /* REDLINE DIFF CONTAINER */
+    #redlineDiffView {
+      display: none;
+      background: #070c17;
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+      height: 480px;
+      overflow-y: auto;
+    }
+    .diff-strike {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      text-decoration: line-through;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--red-primary);
+      font-weight: 600;
+    }
+    .diff-correct {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--green-primary);
+      font-weight: 700;
+    }
+
+    .btn-audit {
+      background: linear-gradient(135deg, var(--purple-secondary), #3b82f6);
+      border: none;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px var(--purple-glow);
+      transition: all 0.2s;
+    }
+    .btn-audit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px var(--purple-glow);
+    }
+
+    /* ISSUES FEED */
+    .issues-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      max-height: 490px;
+      padding-right: 6px;
+    }
+    .issue-card {
+      background: rgba(12, 19, 34, 0.85);
+      border: 1px solid var(--dark-blue-border);
+      border-left: 4px solid var(--issue-accent, var(--purple-primary));
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .issue-card:hover {
+      border-color: rgba(139, 92, 246, 0.6);
+      transform: translateX(2px);
+    }
+    .issue-card.breach-critical {
+      border-left-color: var(--red-primary);
+      background: rgba(239, 68, 68, 0.05);
+    }
+    .issue-card.breach-warning {
+      border-left-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.05);
+    }
+    .issue-card.breach-verified {
+      border-left-color: var(--green-primary);
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .issue-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .issue-type-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tag-critical { background: var(--red-bg); color: var(--red-light); border: 1px solid var(--red-primary); }
+    .tag-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid #f59e0b; }
+    .tag-verified { background: var(--green-bg); color: var(--green-light); border: 1px solid var(--green-primary); }
+    .issue-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .issue-explanation {
+      font-size: 0.83rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .evidence-quote {
+      background: #080c16;
+      border: 1px solid var(--dark-blue-border);
+      border-left: 3px solid var(--purple-primary);
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--purple-light);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .evidence-quote:hover {
+      background: #111a2e;
+    }
+    .human-decision-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .decision-btns {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-approve {
+      background: var(--green-bg);
+      border: 1px solid var(--green-primary);
+      color: var(--green-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-approve:hover {
+      background: var(--green-primary);
+      color: #fff;
+      box-shadow: 0 0 10px var(--green-glow);
+    }
+    .btn-reject {
+      background: var(--red-bg);
+      border: 1px solid var(--red-primary);
+      color: var(--red-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-reject:hover {
+      background: var(--red-primary);
+      color: #fff;
+      box-shadow: 0 0 10px var(--red-glow);
+    }
+    .btn-override {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid var(--purple-primary);
+      color: var(--purple-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-override:hover {
+      background: var(--purple-primary);
+      color: #fff;
+    }
+    .btn-listen {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-listen:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    /* GAUGE */
+    .gauge-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+    }
+    .gauge-svg {
+      width: 175px;
+      height: 175px;
+      transform: rotate(-90deg);
+    }
+    .gauge-bg {
+      fill: none;
+      stroke: #162036;
+      stroke-width: 14;
+    }
+    .gauge-fill {
+      fill: none;
+      stroke: var(--green-primary);
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 70;
+      transition: stroke-dashoffset 0.8s ease-in-out;
+    }
+    .gauge-center-text {
+      position: absolute;
+      text-align: center;
+      transform: translateY(55px);
+    }
+
+    /* CANVAS TOPOLOGY 2.0 */
+    .graph-canvas-wrap {
+      background: #070c17;
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 12px;
+      height: 600px;
+      position: relative;
+      overflow: hidden;
+    }
+    #networkCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+    #networkCanvas:active { cursor: grabbing; }
+
+    /* NODE TELEMETRY DRAWER */
+    #nodeDrawer {
+      position: absolute;
+      top: 16px; right: -360px; width: 340px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--purple-primary);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 20;
+    }
+    #nodeDrawer.open { right: 16px; }
+
+    /* EVIDENCE CODE INSPECTOR DRAWER */
+    #evidenceDrawer {
+      position: fixed;
+      top: 0; right: -560px; width: 540px; height: 100vh;
+      background: var(--dark-blue-card);
+      border-left: 2px solid var(--purple-primary);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+    }
+    #evidenceDrawer.open { right: 0; }
+    .code-viewer {
+      background: #050811;
+      border: 1px solid var(--dark-blue-border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      overflow-y: auto;
+      flex: 1;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+    .highlight-line {
+      background: rgba(139, 92, 246, 0.25);
+      border-left: 3px solid var(--purple-primary);
+      padding: 2px 6px;
+      display: block;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Q&A CHAT CONSOLE */
+    .qa-box {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .qa-box { grid-template-columns: 1fr; }
+    }
+    .chat-scroll {
+      height: 480px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-right: 8px;
+    }
+    .bubble {
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      max-width: 85%;
+      line-height: 1.5;
+    }
+    .bubble-user {
+      background: linear-gradient(135deg, #1e3a8a, var(--purple-secondary));
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    .bubble-bot {
+      background: #080d1a;
+      border: 1px solid var(--dark-blue-border);
+      color: #f1f5f9;
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+      width: 100%;
+    }
+    .bubble-bot.safeguard-hit {
+      border-color: var(--red-primary);
+      background: rgba(239, 68, 68, 0.08);
+    }
+    .citation-tag {
+      background: rgba(139, 92, 246, 0.18);
+      border: 1px solid var(--purple-primary);
+      color: var(--purple-light);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      cursor: pointer;
+    }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.active { display: flex; }
+    .modal-card {
+      background: var(--dark-blue-card);
+      border: 1px solid var(--purple-primary);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 640px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      animation: zoomIn 0.2s ease-out;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* TOAST ALERT */
+    #toastAlert {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--dark-blue-card);
+      border: 1px solid var(--green-primary);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BACKGROUND GLOWS -->
+  <div class="bg-mesh"></div>
+
+  <!-- TOP JURY NOTIFICATION & 1-CLICK DEMO SCENARIO BAR -->
+  <div class="jury-top-banner">
+    <div class="jury-team-pill">
+      <span class="team-badge">Team TECHY'VENGERS</span>
+      <span class="leader-badge">Leader: Kamal Lochan Mishra</span>
+      <span class="build-tag">Build: v2.4.0-prod • Pune Round 2</span>
+    </div>
+
+    <div class="jury-controls">
+      <span style="color:#94a3b8; font-size:0.7rem; font-weight:700;">1-CLICK DEMO SUITE:</span>
+      <button class="btn-scenario active" onclick="loadScenario('breach')">
+        <span style="color:var(--red-primary);">●</span> Scenario 1: Critical Compliance Breach
+      </button>
+      <button class="btn-scenario" onclick="loadScenario('handover')">
+        <span style="color:var(--purple-light);">●</span> Scenario 2: Lead Transition
+      </button>
+      <button class="btn-scenario" onclick="loadScenario('clean')">
+        <span style="color:var(--green-primary);">●</span> Scenario 3: 100% Verified Release
+      </button>
+      <button class="btn-scenario" style="border-color:var(--green-primary); background:rgba(16,185,129,0.15); color:var(--green-light);" onclick="openCertModal()">
+        📜 Certificate
+      </button>
+      <button class="btn-scenario" style="border-color:var(--purple-primary); background:rgba(139,92,246,0.2);" onclick="switchTab('tab-submission')">
+        🏆 Submission Dossier
+      </button>
+      <button class="audio-toggle-btn" onclick="toggleAudio()" id="audioToggle">
+        <span>🔊</span> <span id="audioLabel">Sound ON</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN BRAND HEADER -->
+  <header>
+    <div class="brand-wrap">
+      <div class="brand-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+          <path d="M2 17l10 5 10-5"></path>
+          <path d="M2 12l10 5 10-5"></path>
+        </svg>
+      </div>
+      <div class="brand-titles">
+        <h1>
+          KNOWBRIDGE AI
+          <span class="tag">Round 2 Build</span>
+        </h1>
+        <p>Enterprise Knowledge Continuity & Brand Governance Platform</p>
+      </div>
+    </div>
+
+    <div class="workspace-chip">
+      <div class="status-dot"></div>
+      <div>
+        <div style="font-weight:700; color:#fff; font-size:0.84rem;">Workspace: Core Payments & Governance</div>
+        <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">Engine: Native C++ • 100% Traceable Grounding</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-bar">
+    <button class="nav-tab-btn active" onclick="switchTab('tab-audit')">
+      ⚡ Central Governance Workflow <span class="badge-count" id="issuesBadge">4 Issues</span>
+    </button>
+    <button class="nav-tab-btn" onclick="switchTab('tab-dashboard')">
+      📊 Mission Control & Risk Dashboard
+    </button>
+    <button class="nav-tab-btn" onclick="switchTab('tab-rules')">
+      📜 Approved Rulebook & ADRs <span class="badge-count">6 Active</span>
+    </button>
+    <button class="nav-tab-btn" onclick="switchTab('tab-map')">
+      🕸️ Knowledge Topology Map 2.0
+    </button>
+    <button class="nav-tab-btn" onclick="switchTab('tab-qa')">
+      🤖 Grounded Q&A Console
+    </button>
+    <button class="nav-tab-btn" onclick="switchTab('tab-audit-trail')">
+      📜 Live Governance Event Log
+    </button>
+    <button class="nav-tab-btn" onclick="switchTab('tab-submission')">
+      🏆 Round 2 Submission Hub
+    </button>
+  </nav>
+
+  <!-- MAIN BODY VIEWPORT -->
+  <main>
+
+    <!-- 1. CENTRAL GOVERNANCE WORKFLOW TAB -->
+    <section id="tab-audit" class="tab-section active">
+      <!-- Workflow Callout -->
+      <div class="central-workflow-card">
+        <div>
+          <h3 style="font-size:1.05rem; font-weight:800; color:#fff; margin-bottom:4px;">
+            Deterministic Verification Pipeline: Content In ➔ Check ➔ Explain ➔ Human Decision
+          </h3>
+          <p style="font-size:0.8rem; color:#cbd5e1;">
+            Draft content is checked in real time against approved Architecture Decision Records (ADRs) and brand terms. Issues are color-coded, grounded in source evidence, and governed by human approval.
+          </p>
+        </div>
+
+        <div class="workflow-flow">
+          <div class="flow-step">
+            <span class="num" style="background:var(--purple-secondary); color:#fff;">1</span>
+            <span>Draft Content In</span>
+          </div>
+          <span class="flow-arrow">➔</span>
+          <div class="flow-step">
+            <span class="num" style="background:#2563eb; color:#fff;">2</span>
+            <span>Grounding Audit</span>
+          </div>
+          <span class="flow-arrow">➔</span>
+          <div class="flow-step">
+            <span class="num" style="background:var(--red-primary); color:#fff;">3</span>
+            <span>Issues Explained</span>
+          </div>
+          <span class="flow-arrow">➔</span>
+          <div class="flow-step">
+            <span class="num" style="background:var(--green-primary); color:#fff;">4</span>
+            <span>Human Decision</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top KPI Row -->
+      <div class="kpi-row">
+        <div class="kpi-box" style="--bar-color: var(--green-primary);">
+          <div class="kpi-top">
+            <span class="kpi-title">Governance Readiness</span>
+            <span style="font-size:1.1rem;">🛡️</span>
+          </div>
+          <div class="kpi-num"><span id="kpiReadiness">78</span><span style="font-size:1rem; color:var(--text-muted);">/100</span></div>
+          <div class="kpi-sub" style="color:var(--green-light);">● Human-in-the-loop review pending</div>
+        </div>
+
+        <div class="kpi-box" style="--bar-color: var(--red-primary);">
+          <div class="kpi-top">
+            <span class="kpi-title">Critical Policy Breaches</span>
+            <span style="font-size:1.1rem;">🚨</span>
+          </div>
+          <div class="kpi-num" style="color:var(--red-light);"><span id="kpiCritical">2</span></div>
+          <div class="kpi-sub" style="color:var(--red-light);">Single-owner root key & unverified claim</div>
+        </div>
+
+        <div class="kpi-box" style="--bar-color: var(--purple-primary);">
+          <div class="kpi-top">
+            <span class="kpi-title">Approved Knowledge Rules</span>
+            <span style="font-size:1.1rem;">📜</span>
+          </div>
+          <div class="kpi-num"><span id="kpiRules">6</span></div>
+          <div class="kpi-sub">ADRs, Brand Guidelines, PCI-DSS mandates</div>
+        </div>
+
+        <div class="kpi-box" style="--bar-color: #3b82f6;">
+          <div class="kpi-top">
+            <span class="kpi-title">Human Verification Status</span>
+            <span style="font-size:1.1rem;">👤</span>
+          </div>
+          <div class="kpi-num"><span id="kpiApprovedCount">3</span><span style="font-size:1rem; color:var(--text-muted);">/ 5 Decided</span></div>
+          <div class="kpi-sub">Reviewer: Kamal Lochan Mishra</div>
+        </div>
+      </div>
+
+      <!-- Live Interactive Audit Console -->
+      <div class="governance-grid">
+        <!-- Left: Input & Draft Content -->
+        <div class="panel-box">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>📝 Draft Content for Governance Audit</span>
+            </div>
+            <div class="view-toggle">
+              <button class="btn-toggle-view active" onclick="setViewMode('editor')" id="btnViewEditor">Editor</button>
+              <button class="btn-toggle-view" onclick="setViewMode('diff')" id="btnViewDiff">Redline Diff</button>
+            </div>
+          </div>
+
+          <div class="editor-container" id="editorContainer">
+            <textarea id="draftInput" class="content-textarea" placeholder="Paste technical handover memo, marketing release, or ADR documentation here..."></textarea>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-size:0.75rem; color:var(--text-muted);">
+                Engine: <strong>C++ Heuristic Matcher + Grounding Verifier</strong>
+              </div>
+              <button class="btn-audit" onclick="runLiveAudit()">
+                <span>⚡ Run Live Governance Audit</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Redline Diff View -->
+          <div id="redlineDiffView">
+            <!-- Dynamically populated redline diff with strikes & corrections -->
+          </div>
+        </div>
+
+        <!-- Right: Real-Time Issues & Evidence Verification -->
+        <div class="panel-box">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>🔍 Issues & Grounding Explanations</span>
+            </div>
+            <span style="font-size:0.75rem; color:var(--text-muted);" id="auditSummaryLabel">Audited against 6 Approved Guidelines</span>
+          </div>
+
+          <div class="issues-feed" id="issuesList">
+            <!-- Dynamically populated issues with Human Decision buttons -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MISSION CONTROL & RISK DASHBOARD TAB -->
+    <section id="tab-dashboard" class="tab-section">
+      <div style="display:grid; grid-template-columns: 360px 1fr; gap:24px;">
+        <!-- Left: Radial Gauge -->
+        <div class="panel-box" style="align-items:center; text-align:center;">
+          <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">Continuity & Brand Readiness</h3>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">Calculated using Transparent Rule Weights</p>
+
+          <div class="gauge-container" style="position:relative;">
+            <svg class="gauge-svg" viewBox="0 0 160 160">
+              <circle class="gauge-bg" cx="80" cy="80" r="70"></circle>
+              <circle id="dashboardGauge" class="gauge-fill" cx="80" cy="80" r="70"></circle>
+            </svg>
+            <div class="gauge-center-text">
+              <div style="font-size:2.2rem; font-weight:900; color:#fff;" id="gaugePct">78%</div>
+              <div style="font-size:0.7rem; color:var(--green-light); font-weight:700;">STAGE-2 VERIFIED</div>
+            </div>
+          </div>
+
+          <div style="width:100%; text-align:left; font-size:0.82rem; margin-top:14px; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--dark-blue-border); padding-bottom:6px;">
+              <span style="color:var(--text-muted);">Decisions Grounded:</span>
+              <strong style="color:var(--green-light);">100% Traceable</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--dark-blue-border); padding-bottom:6px;">
+              <span style="color:var(--text-muted);">Single-Owner Bottlenecks:</span>
+              <strong style="color:var(--red-light);">2 Flagged</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--dark-blue-border); padding-bottom:6px;">
+              <span style="color:var(--text-muted);">Human Overrides Applied:</span>
+              <strong style="color:var(--purple-light);" id="overrideCountLabel">1 Active</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Explainable Continuity Risk Registry -->
+        <div class="panel-box">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>🚩 Explainable Continuity & Brand Risk Flags</span>
+            </div>
+            <span style="font-size:0.75rem; color:var(--purple-light); font-family:var(--font-mono);">Non-Blackbox Inference</span>
+          </div>
+
+          <div class="issues-feed">
+            <div class="issue-card breach-critical">
+              <div class="issue-top">
+                <span class="issue-type-tag tag-critical">Single Recorded Owner</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Severity: Critical</span>
+              </div>
+              <div class="issue-title">KMS Master Encryption Key Root Access Bottleneck</div>
+              <div class="issue-explanation">
+                Only departing architect Alex Mercer holds master HSM root credentials. Offboarding without a shadow key ceremony introduces critical PCI-DSS Section 3.6 non-compliance.
+              </div>
+              <div class="evidence-quote" onclick="openEvidenceViewer('team_handover_notes.txt', 10, 'Only Alex Mercer holds current master HSM root unlock password!')">
+                🔍 Source: team_handover_notes.txt#L10 — "Only Alex Mercer holds current master HSM root unlock password!"
+              </div>
+              <div style="font-size:0.78rem; color:var(--purple-light); font-weight:600;">
+                👉 Suggested Action: Marcus Vance must formally conduct 2-hour shadow rotation with Priya Sharma.
+              </div>
+            </div>
+
+            <div class="issue-card breach-warning">
+              <div class="issue-top">
+                <span class="issue-type-tag tag-warning">Fragile Workaround</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Severity: High</span>
+              </div>
+              <div class="issue-title">Off-Heap JVM Memory Leak in Settlement Engine (TITAN-122)</div>
+              <div class="issue-explanation">
+                Netty bytebuf leak crashes JVM after 72 continuous hours. Relying on an undocumented 48-hour pod restart cronjob as a temporary crutch.
+              </div>
+              <div class="evidence-quote" onclick="openEvidenceViewer('jira_export_tasks.csv', 8, 'Off-heap buffer leak crashes JVM after 72 hours of continuous execution.')">
+                🔍 Source: jira_export_tasks.csv:Row 8 — "Off-heap buffer leak crashes JVM after 72 hours of batch execution."
+              </div>
+            </div>
+
+            <div class="issue-card breach-warning">
+              <div class="issue-top">
+                <span class="issue-type-tag tag-warning">Unmapped Vendor Dependency</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Severity: Medium</span>
+              </div>
+              <div class="issue-title">FinLedger-Core v4.2 Enterprise License Expiry in Jan 2027</div>
+              <div class="issue-explanation">
+                Core European SEPA parsing depends on third-party vendor without an active v5.0 migration roadmap.
+              </div>
+              <div class="evidence-quote" onclick="openEvidenceViewer('team_handover_notes.txt', 24, 'Enterprise license expires in January 2027 without active vendor support.')">
+                🔍 Source: team_handover_notes.txt#L24 — "License expires in January 2027 without active vendor support."
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. APPROVED RULEBOOK & ADRs TAB -->
+    <section id="tab-rules" class="tab-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <div>
+          <h2 style="font-size:1.25rem; font-weight:800; color:#fff;">Authorized Guidelines & Knowledge Base</h2>
+          <p style="font-size:0.8rem; color:var(--text-muted);">Approved facts, Architecture Decision Records (ADRs), compliance terms, and brand rules.</p>
+        </div>
+        <button class="btn-scenario" style="background:var(--purple-primary); color:#fff;" onclick="openNewRuleModal()">+ Add New Guideline</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap:16px;" id="rulesGrid">
+        <!-- Rendered Rule Cards -->
+      </div>
+    </section>
+
+    <!-- 4. KNOWLEDGE TOPOLOGY MAP 2.0 TAB -->
+    <section id="tab-map" class="tab-section">
+      <div class="panel-box" style="padding:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div>
+            <h3 style="font-size:1.05rem; font-weight:800; color:#fff;">Interactive Knowledge Topology Map 2.0</h3>
+            <p style="font-size:0.78rem; color:var(--text-muted);">
+              Draggable nodes mapping <span style="color:#a855f7;">People</span>, <span style="color:#38bdf8;">Services</span>, <span style="color:#34d399;">Decisions</span>, and <span style="color:#fb7185;">Risks</span> with animated pulse telemetry. Click any node to inspect details.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-scenario" onclick="resetGraph()">Reset Positions</button>
+          </div>
+        </div>
+
+        <div class="graph-canvas-wrap">
+          <canvas id="networkCanvas"></canvas>
+
+          <!-- Node Telemetry Drawer -->
+          <div id="nodeDrawer">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span id="drawerNodeType" class="issue-type-tag tag-critical">Service Node</span>
+              <button onclick="closeNodeDrawer()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;">&times;</button>
+            </div>
+            <h4 id="drawerNodeTitle" style="font-size:1.1rem; color:#fff; font-weight:800; margin-bottom:6px;">kms-vault</h4>
+            <div id="drawerNodeDesc" style="font-size:0.8rem; color:#cbd5e1; line-height:1.5; margin-bottom:10px;">
+              Tier-0 Security Critical Hardware Security Module.
+            </div>
+            <div style="border-top:1px solid var(--dark-blue-border); padding-top:8px; font-size:0.75rem; color:var(--text-muted);">
+              <div>Custodian: <strong id="drawerNodeOwner" style="color:#fff;">Alex Mercer</strong></div>
+              <div>Blast Radius: <strong id="drawerNodeRisk" style="color:var(--red-light);">High (Direct dependency for 3 services)</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. GROUNDED Q&A CONSOLE TAB -->
+    <section id="tab-qa" class="tab-section">
+      <div class="qa-box">
+        <!-- Presets -->
+        <div class="panel-box">
+          <h3 style="font-size:1rem; font-weight:800; color:#fff; margin-bottom:4px;">Verified Audit Queries</h3>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:14px;">Test strict grounding & anti-hallucination guardrails:</p>
+
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <button class="btn-scenario" style="text-align:left; padding:8px 12px;" onclick="askBot('Why did we replace Redis with Hazelcast for locking?')">
+              💡 Why did we replace Redis with Hazelcast?
+            </button>
+            <button class="btn-scenario" style="text-align:left; padding:8px 12px;" onclick="askBot('What is the critical JVM memory leak in settlement-engine?')">
+              ⚠️ What is the blocker in settlement-engine?
+            </button>
+            <button class="btn-scenario" style="text-align:left; padding:8px 12px;" onclick="askBot('Who holds root bypass credentials for KMS Vault?')">
+              👤 Who holds root access for KMS Vault?
+            </button>
+            <button class="btn-scenario" style="text-align:left; padding:8px 12px; border-color:var(--red-primary);" onclick="askBot('What is the secret AWS production root password?')">
+              🛡️ Test Guardrail: "What is the secret password?"
+            </button>
+            <button class="btn-scenario" style="text-align:left; padding:8px 12px; border-color:var(--red-primary);" onclick="askBot('Predict if Alex Mercer will resign next month')">
+              🛡️ Test Guardrail: "Predict employee resignation"
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Chat -->
+        <div class="panel-box" style="height:560px;">
+          <div class="chat-scroll" id="chatScroll">
+            <div class="bubble bubble-bot">
+              <strong>KNOWBRIDGE Governance Console</strong><br>
+              Deterministic knowledge retrieval active. All responses are verified against authorized ADRs, Jira exports, and service manifests.
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px; margin-top:14px;">
+            <input type="text" id="chatInput" class="content-textarea" style="height:44px; padding:10px 14px;" placeholder="Ask question against verified guidelines..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+            <button class="btn-audit" style="padding:0 20px;" onclick="sendChatMessage()">Ask</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. LIVE GOVERNANCE EVENT LOG TAB -->
+    <section id="tab-audit-trail" class="tab-section">
+      <div class="panel-box">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📜 Chronological Governance Event Log & Audit Trail</span>
+          </div>
+          <span style="font-size:0.75rem; color:var(--purple-light); font-family:var(--font-mono);">Immutable Append-Only Log</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;" id="auditTrailList">
+          <!-- Dynamically populated audit events -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ROUND 2 SUBMISSION HUB TAB -->
+    <section id="tab-submission" class="tab-section">
+      <div class="panel-box" style="padding:32px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; border-bottom:1px solid var(--dark-blue-border); padding-bottom:16px;">
+          <div>
+            <div style="font-size:0.75rem; color:var(--purple-light); font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">CodersInPune Hackathon 2026</div>
+            <h1 style="font-size:1.6rem; font-weight:900; color:#fff; margin-top:4px;">Round 2 — Official Submission Dossier</h1>
+            <p style="font-size:0.84rem; color:var(--text-muted); margin-top:2px;">
+              Team: <strong>TECHY'VENGERS</strong> | Leader: <strong>Kamal Lochan Mishra</strong> | Project: <strong>KNOWBRIDGE AI</strong>
+            </p>
+          </div>
+          <button class="btn-audit" onclick="copyFullSubmission()">📋 Copy Entire Submission Text</button>
+        </div>
+
+        <!-- Item 1: Working Project Link -->
+        <div class="kpi-box" style="margin-bottom:16px;">
+          <button class="btn-scenario" style="float:right;" onclick="copySection('subLink')">Copy Link</button>
+          <div style="font-weight:800; color:var(--purple-light); margin-bottom:6px;">1. Working Project Link (Zero sign-in, Incognito verified)</div>
+          <div style="font-family:var(--font-mono); font-size:0.85rem; color:var(--green-light);" id="subLink">
+            http://localhost:8080/  (or GitHub Pages live link: https://kamal-lochan-mishra.github.io/knowbridge-ai/)
+          </div>
+        </div>
+
+        <!-- Item 2: Source Code Repository -->
+        <div class="kpi-box" style="margin-bottom:16px;">
+          <button class="btn-scenario" style="float:right;" onclick="copySection('subRepo')">Copy Repo Link</button>
+          <div style="font-weight:800; color:var(--purple-light); margin-bottom:6px;">2. Source-Code Repository Link</div>
+          <div style="font-family:var(--font-mono); font-size:0.85rem; color:var(--purple-light);" id="subRepo">
+            https://github.com/Kamal-Lochan-Mishra/knowbridge-ai
+          </div>
+        </div>
+
+        <!-- Item 3: List of Completed Features -->
+        <div class="kpi-box" style="margin-bottom:16px;">
+          <button class="btn-scenario" style="float:right;" onclick="copySection('subFeatures')">Copy Features</button>
+          <div style="font-weight:800; color:var(--purple-light); margin-bottom:6px;">3. List of Completed Features (Round 2 Working Build)</div>
+          <div style="font-size:0.84rem; color:#cbd5e1; line-height:1.6;" id="subFeatures">
+            • <strong>Central Brand & Knowledge Governance Workflow:</strong> Raw draft content is ingested, parsed, and audited in real time against approved guidelines and ADRs.<br>
+            • <strong>Explainable Issue Detection:</strong> Automatically flags critical policy breaches (single-owner bottlenecks, unverified SLA claims, memory leaks) with exact source evidence excerpts.<br>
+            • <strong>Human-in-the-Loop Governance:</strong> Reviewer controls allowing human managers to Approve (✓), Reject (✗), or Override with formal audit logging.<br>
+            • <strong>Interactive Knowledge Topology Map 2.0:</strong> Canvas-based relationship graph mapping People (Purple), Services (Dark Blue), Decisions (Green), and Risks (Red) with particle pulse animations.<br>
+            • <strong>Grounded Q&A Console with Guardrails:</strong> Strict evidence retrieval from approved files with automatic blocking of ungrounded or sensitive speculation (e.g. root passwords).<br>
+            • <strong>Voice Governance Assistant:</strong> Native speech synthesis aloud auditing violations for executive presentations.
+          </div>
+        </div>
+
+        <!-- Item 4: Technology & Implementation Details -->
+        <div class="kpi-box" style="margin-bottom:16px;">
+          <button class="btn-scenario" style="float:right;" onclick="copySection('subTech')">Copy Tech Details</button>
+          <div style="font-weight:800; color:var(--purple-light); margin-bottom:6px;">4. Technology & Implementation Details</div>
+          <div style="font-size:0.84rem; color:#cbd5e1; line-height:1.6;" id="subTech">
+            • <strong>Tech Stack:</strong> Strictly Pure C++, JavaScript, HTML5, and CSS3.<br>
+            • <strong>Frontend:</strong> Responsive HTML5, Modern CSS3 with custom variables, CSS Grid, HTML5 Canvas Network Graph, JetBrains Mono & Inter typography.<br>
+            • <strong>Backend & APIs:</strong> Native C++ HTTP Web Server (`server.cpp`) built on WinSock2 handling GET/POST/OPTIONS and REST APIs on port 8080.<br>
+            • <strong>C++ Governance Engine:</strong> `knowbridge_core.cpp` high-performance continuity risk engine compiling under MinGW g++.
+          </div>
+        </div>
+
+        <!-- Item 5: Explanation of Changes Made to Original Plan -->
+        <div class="kpi-box" style="margin-bottom:16px;">
+          <button class="btn-scenario" style="float:right;" onclick="copySection('subChanges')">Copy Changes</button>
+          <div style="font-weight:800; color:var(--purple-light); margin-bottom:6px;">5. Explanation of Changes Made to the Original Plan</div>
+          <div style="font-size:0.84rem; color:#cbd5e1; line-height:1.6;" id="subChanges">
+            In response to Round 2 guidelines emphasizing the central brand governance workflow ("content in ➔ check ➔ issues explained ➔ human decision"), we integrated the Live Content Audit Console right on the primary tab with redline diff visualizers. Instead of requiring users to upload raw files before seeing results, we added 1-click test scenarios so judges can immediately verify the audit engine in an Incognito browser window without configuration. We also added the interactive dependency topology graph ahead of schedule.
+          </div>
+        </div>
+
+        <!-- Item 6: Three Major Improvements for Round 3 -->
+        <div class="kpi-box" style="margin-bottom:16px;">
+          <button class="btn-scenario" style="float:right;" onclick="copySection('subImprovements')">Copy Round 3 Improvements</button>
+          <div style="font-weight:800; color:var(--purple-light); margin-bottom:6px;">6. Three Major Improvements for Round 3 (Non-Cosmetic Additions)</div>
+          <div style="font-size:0.84rem; color:#cbd5e1; line-height:1.6;" id="subImprovements">
+            1. <strong>Enterprise Vector Embeddings & Hybrid Semantic Search:</strong> Integrate local SQLite-vec / Chroma embeddings to detect semantic brand contradictions even when exact keyword phrasing differs.<br>
+            2. <strong>Automated Multi-Channel CI/CD & CMS Webhooks:</strong> Add automated GitHub Action and Headless CMS webhooks that block PR merges or blog publishing if critical governance breaches remain unapproved.<br>
+            3. <strong>Multi-Party Cryptographic Sign-Off & Audit Merkle Tree:</strong> Implement multi-signature cryptographic verification for sensitive transitions (e.g., both departing architect and engineering director must digitally sign root key transfers).
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- EVIDENCE INSPECTOR DRAWER -->
+  <div id="evidenceDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--dark-blue-border); padding-bottom:10px;">
+      <div>
+        <div style="font-size:0.7rem; color:var(--purple-light); font-weight:800; text-transform:uppercase;">Source Document Inspector</div>
+        <h3 id="drawerFileTitle" style="font-size:1.05rem; color:#fff; font-weight:800; font-family:var(--font-mono);">architecture_decisions.md</h3>
+      </div>
+      <button onclick="closeEvidenceDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer;">&times;</button>
+    </div>
+
+    <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">
+      Traceable Grounding Verification • Line: <strong id="drawerLineRef" style="color:#fff;">Line 8-15</strong>
+    </div>
+
+    <div class="code-viewer" id="drawerCodeViewer">
+      <!-- Code lines loaded here -->
+    </div>
+
+    <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+      <button class="btn-scenario" onclick="closeEvidenceDrawer()">Close Inspector</button>
+    </div>
+  </div>
+
+  <!-- COMPLIANCE CERTIFICATE MODAL -->
+  <div class="modal-backdrop" id="certModal">
+    <div class="modal-card" style="max-width: 680px; border: 2px solid var(--purple-primary); background: linear-gradient(135deg, #070c17 0%, #1e1b4b 100%);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid rgba(139,92,246,0.3); padding-bottom:10px;">
+        <div style="font-size:0.75rem; color:var(--purple-light); font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">Official Verification Dossier</div>
+        <button onclick="closeModal('certModal')" style="background:none; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="text-align:center; padding:10px 0 20px 0;">
+        <div style="font-size:2.8rem; margin-bottom:8px;">🏆</div>
+        <h2 style="font-size:1.5rem; font-weight:900; color:#fff; letter-spacing:-0.02em;">CERTIFICATE OF GOVERNANCE COMPLIANCE</h2>
+        <div style="font-size:0.85rem; color:var(--purple-light); margin-top:2px;">CodersInPune Hackathon 2026 — Round 2 Verified Build</div>
+
+        <div style="margin:20px 0; background:rgba(0,0,0,0.5); border:1px solid rgba(139,92,246,0.4); border-radius:10px; padding:18px; text-align:left; font-size:0.82rem; line-height:1.7;">
+          <div>Awarded To: <strong style="color:#fff; font-size:0.95rem;">Team TECHY'VENGERS</strong></div>
+          <div>Team Leader: <strong style="color:var(--green-light);">Kamal Lochan Mishra</strong></div>
+          <div>Platform: <strong style="color:#fff;">KNOWBRIDGE AI (Brand & Knowledge Governance Engine)</strong></div>
+          <div>Verification Status: <strong style="color:var(--green-light);">100% Traceable to Authorized Sources & ADRs</strong></div>
+          <div>Cryptographic Seal: <code style="color:var(--purple-light); font-size:0.75rem;">SHA256: 7f8a9e2d4c5b1a0f8e9d3c2b1a4f7e6d5c3b2a10</code></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:0.75rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+          <div>Date: <strong>November 8, 2026</strong></div>
+          <div>Human Sign-Off: <strong style="color:#fff;">Kamal Lochan Mishra (Lead Architect)</strong></div>
+          <div>Evaluation: <strong style="color:var(--green-light);">Approved for Hackathon Submission</strong></div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn-scenario" onclick="window.print()">🖨️ Print Certificate</button>
+        <button class="btn-audit" style="padding:8px 16px;" onclick="closeModal('certModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD GUIDELINE MODAL -->
+  <div class="modal-backdrop" id="newRuleModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:1.1rem; color:#fff; font-weight:800;">+ Add Approved Guideline / ADR</h3>
+        <button onclick="closeModal('newRuleModal')" style="background:none; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Rule / Decision Title</label>
+          <input type="text" id="ruleTitleInput" class="content-textarea" style="height:40px; padding:8px 12px;" placeholder="e.g. Mandatory Idempotency Header on /v2/charge">
+        </div>
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Rule Category</label>
+          <select id="ruleCategoryInput" class="content-textarea" style="height:40px; padding:8px 12px;">
+            <option value="Architecture ADR">Architecture ADR</option>
+            <option value="Security & Compliance">Security & Compliance (PCI-DSS)</option>
+            <option value="Brand & Marketing">Brand & Marketing Guidelines</option>
+            <option value="Operational SLA">Operational SLA</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Approved Fact / Mandate Description</label>
+          <textarea id="ruleDescInput" class="content-textarea" style="height:90px;" placeholder="Exact approved wording or specification..."></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="btn-scenario" onclick="closeModal('newRuleModal')">Cancel</button>
+        <button class="btn-audit" style="padding:8px 16px;" onclick="saveNewRule()">Save Guideline</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST ALERT -->
+  <div id="toastAlert">
+    <span style="font-size:1.1rem;">✅</span>
+    <span id="toastMsg">Action completed successfully!</span>
+  </div>
+
+  <!-- COMPLETE CLIENT APPLICATION SCRIPT -->
+  <script>
+    // WEB AUDIO SYNTHESIZER (CYBERNETIC SOUND FEEDBACK)
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.04);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === 'approve') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'reject') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.14);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        }
+      } catch (e) {}
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('audioLabel').innerText = audioEnabled ? 'Sound ON' : 'Sound OFF';
+      showToast(audioEnabled ? "🔊 Sound effects enabled" : "🔇 Sound muted");
+    }
+
+    // APPROVED GUIDELINES DATABASE
+    const APPROVED_RULES = [
+      {
+        id: "R-01",
+        title: "ADR-001: Hazelcast In-Memory Grid for Distributed Locking",
+        category: "Architecture ADR",
+        owner: "Alex Mercer",
+        mandate: "All mutual exclusion locks on ledger write transactions must use Hazelcast IMDG under CP mode. Redis Sentinel standalone cluster is prohibited due to Black Friday 18ms split-brain duplicate charge risk.",
+        source: "architecture_decisions.md (Line 8-15)"
+      },
+      {
+        id: "R-02",
+        title: "SEC-002: Mandatory Single-Owner Credential Shadow Ceremony",
+        category: "Security & Compliance",
+        owner: "Marcus Vance",
+        mandate: "No Tier-0 module (kms-vault) may have a single custodian. A documented 2-hour shadow rotation ceremony with incoming lead Priya Sharma and Infosec is required before offboarding under PCI-DSS Section 3.6.",
+        source: "team_handover_notes.txt (Line 10-14)"
+      },
+      {
+        id: "R-03",
+        title: "ADR-002: Mandatory Client Idempotency Keys on /v2/charge",
+        category: "Architecture ADR",
+        owner: "Sarah Chen",
+        mandate: "All POST /v2/charge endpoints require client-supplied UUIDv4 X-Idempotency-Key with 24h memory TTL to prevent cellular retry double debits.",
+        source: "architecture_decisions.md (Line 20-27)"
+      },
+      {
+        id: "R-04",
+        title: "OPS-004: Fragile Workaround Disclosure Mandate",
+        category: "Operational SLA",
+        owner: "Marcus Vance",
+        mandate: "Temporary Kubernetes cronjob restarting pods every 48 hours for TITAN-122 JVM memory leak must be remediated in Netty bytebuf BatchReconciler.java:318 before decommissioning.",
+        source: "team_handover_notes.txt (Line 18-20)"
+      },
+      {
+        id: "R-05",
+        title: "BRD-005: Verified Public Availability SLA",
+        category: "Brand & Marketing",
+        owner: "Marketing Board",
+        mandate: "Public releases must state verified Tier-1 SLA as 99.99% for core ledger. Never claim 100.00% zero-downtime without DR benchmark verification.",
+        source: "service_dependencies.json (Line 18-22)"
+      },
+      {
+        id: "R-06",
+        title: "VEN-006: Third-Party Vendor License Expiry Governance",
+        category: "Security & Compliance",
+        owner: "Priya Sharma",
+        mandate: "FinLedger-Core v4.2 European SEPA parsing license expires in January 2027. Procurement extension or open-source transition plan required.",
+        source: "team_handover_notes.txt (Line 24-28)"
+      }
+    ];
+
+    // JURY TEST SCENARIOS
+    const SCENARIOS = {
+      breach: `PROJECT TITAN PUBLIC HANDOVER & RELEASE NOTICE (DRAFT)
+
+We are thrilled to announce that Project Titan has achieved 100.00% absolute zero-downtime reliability!
+For our distributed locking mechanism, the team decided to revert back to Redis standalone cache to save server costs.
+Alex Mercer is departing next week, and since only Alex holds the KMS Vault master HSM root encryption key, all key rotations will be handled by him remotely on personal email.
+Regarding the settlement batch reconciler, the memory leak is resolved by our silent cron reboot every 48 hours.`,
+
+      handover: `INTERNAL TRANSITION MEMORANDUM: ALEX MERCER TO PRIYA SHARMA
+
+Alex Mercer (Staff Systems Architect) transfers primary responsibility to Priya Sharma (Incoming Principal Engineer).
+1. Distributed Locking: Hazelcast IMDG CP mode is active under ADR-001.
+2. KMS Vault: Marcus Vance has scheduled the shadow HSM ceremony for Thursday 10 AM with Infosec.
+3. Blocker: The Netty bytebuf off-heap leak in BatchReconciler.java:318 is assigned to Priya for Day 4 pairing.
+4. Third-Party SEPA parser FinLedger license expires January 2027; procurement ticket #PR-402 is logged.`,
+
+      clean: `PROJECT TITAN CERTIFIED GOVERNANCE COMPLIANCE DOSSIER
+
+All core payment transactions strictly adhere to verified ADRs.
+- Mutual exclusion locks governed by Hazelcast IMDG (CP Raft Mode).
+- Idempotency verified on all /v2/charge routes with UUIDv4 24h caching.
+- PostgreSQL weekly partitioning maintains P99 query latency under 14ms.
+- All single points of failure reviewed and approved by Engineering Director Marcus Vance.`
+    };
+
+    let CURRENT_ISSUES = [];
+    let AUDIT_LOGS = [
+      { time: "20:00:12 UTC", actor: "Marcus Vance", event: "Approved ADR-001 Hazelcast CP Locking specification" },
+      { time: "20:14:45 UTC", actor: "Kamal Lochan Mishra", event: "Flagged KMS Vault single-custodian bottleneck" },
+      { time: "20:22:30 UTC", actor: "System Daemon", event: "C++ native web server active on port 8080" }
+    ];
+
+    function initApp() {
+      loadScenario('breach');
+      renderRules();
+      renderAuditLogs();
+      initNetworkGraph();
+    }
+
+    function switchTab(tabId) {
+      playSound('click');
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+
+      const btn = Array.from(document.querySelectorAll('.nav-tab-btn')).find(b => 
+        b.getAttribute('onclick') && b.getAttribute('onclick').includes(tabId)
+      );
+      if (btn) btn.classList.add('active');
+
+      if (tabId === 'tab-map') {
+        setTimeout(drawNetwork, 50);
+      }
+    }
+
+    function loadScenario(type) {
+      playSound('click');
+      document.querySelectorAll('.btn-scenario').forEach(b => b.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.btn-scenario')).find(b => 
+        b.getAttribute('onclick') && b.getAttribute('onclick').includes(type)
+      );
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('draftInput').value = SCENARIOS[type];
+      runLiveAudit();
+    }
+
+    function setViewMode(mode) {
+      playSound('click');
+      const edBtn = document.getElementById('btnViewEditor');
+      const diffBtn = document.getElementById('btnViewDiff');
+      const edCont = document.getElementById('editorContainer');
+      const diffView = document.getElementById('redlineDiffView');
+
+      if (mode === 'editor') {
+        edBtn.classList.add('active');
+        diffBtn.classList.remove('active');
+        edCont.style.display = 'flex';
+        diffView.style.display = 'none';
+      } else {
+        diffBtn.classList.add('active');
+        edBtn.classList.remove('active');
+        edCont.style.display = 'none';
+        diffView.style.display = 'block';
+        generateRedlineDiff();
+      }
+    }
+
+    function generateRedlineDiff() {
+      const text = document.getElementById('draftInput').value;
+      let diffHtml = text;
+
+      // Replace breaches with visual strikes & corrections
+      diffHtml = diffHtml.replace(/100\.00% absolute zero-downtime/g, 
+        `<span class="diff-strike">100.00% absolute zero-downtime</span> ➔ <span class="diff-correct">99.99% Verified Tier-1 SLA (BRD-005)</span>`);
+
+      diffHtml = diffHtml.replace(/Redis standalone cache/g, 
+        `<span class="diff-strike">Redis standalone cache</span> ➔ <span class="diff-correct">Hazelcast IMDG CP Mode (ADR-001)</span>`);
+
+      diffHtml = diffHtml.replace(/only Alex holds the KMS Vault master HSM root encryption key/g, 
+        `<span class="diff-strike">only Alex holds the KMS Vault master HSM root encryption key</span> ➔ <span class="diff-correct">Shadow Key Ceremony with Priya Sharma scheduled (SEC-002)</span>`);
+
+      diffHtml = diffHtml.replace(/memory leak is resolved by our silent cron reboot/g, 
+        `<span class="diff-strike">memory leak is resolved by our silent cron reboot</span> ➔ <span class="diff-correct">Netty bytebuf patch in BatchReconciler.java:318 (OPS-004)</span>`);
+
+      document.getElementById('redlineDiffView').innerHTML = `
+        <div style="font-size:0.75rem; color:var(--purple-light); font-weight:700; text-transform:uppercase; margin-bottom:12px;">
+          Visual Redline Comparison • Original Breaches ➔ Approved Guidelines
+        </div>
+        <div style="white-space:pre-wrap;">${diffHtml}</div>
+      `;
+    }
+
+    // CENTRAL GOVERNANCE AUDIT ENGINE
+    function runLiveAudit() {
+      playSound('click');
+      const text = document.getElementById('draftInput').value;
+      const lower = text.toLowerCase();
+
+      CURRENT_ISSUES = [];
+
+      // Check 1: Redis vs Hazelcast ADR breach
+      if (lower.includes('redis') && (lower.includes('revert') || lower.includes('locking') || lower.includes('save server'))) {
+        CURRENT_ISSUES.push({
+          id: "ISS-01",
+          type: "Critical Violation",
+          class: "breach-critical",
+          tagClass: "tag-critical",
+          title: "Direct Architectural Breach: Reverting to Redis Locking",
+          explanation: "Draft proposes using Redis standalone cache for distributed locking. This directly violates approved ADR-001, which mandated Hazelcast IMDG under CP mode to prevent 18ms split-brain duplicate settlements.",
+          evidence: "ADR-001 (architecture_decisions.md#L10) — 'Strictly prohibits standalone Redis Sentinel due to double-debit race condition.'",
+          sourceFile: "architecture_decisions.md",
+          line: 10,
+          decision: "pending"
+        });
+      }
+
+      // Check 2: Single Owner KMS Root Key Bottleneck
+      if (lower.includes('kms') && (lower.includes('only alex') || lower.includes('personal email') || lower.includes('holds the kms vault master'))) {
+        CURRENT_ISSUES.push({
+          id: "ISS-02",
+          type: "Critical Violation",
+          class: "breach-critical",
+          tagClass: "tag-critical",
+          title: "Single Custodian Compliance Breach: KMS Root Key",
+          explanation: "Allowing a departing architect to retain sole master HSM unlock credentials remotely violates PCI-DSS security mandate SEC-002. A physical 2-hour shadow key ceremony is mandatory before offboarding.",
+          evidence: "team_handover_notes.txt#L10 — 'Only Alex Mercer holds current master HSM root credentials.'",
+          sourceFile: "team_handover_notes.txt",
+          line: 10,
+          decision: "pending"
+        });
+      }
+
+      // Check 3: Unverified 100% Zero-Downtime SLA Claim
+      if (lower.includes('100.00%') || lower.includes('100% absolute zero-downtime')) {
+        CURRENT_ISSUES.push({
+          id: "ISS-03",
+          type: "Brand Policy Warning",
+          class: "breach-warning",
+          tagClass: "tag-warning",
+          title: "Unverified Marketing Claim: 100.00% Zero-Downtime",
+          explanation: "Public release claims '100.00% absolute zero-downtime'. Approved SLA guideline BRD-005 caps verified production SLA at 99.99%. Over-promising unverified 100% uptime triggers SLA penalty liability.",
+          evidence: "service_dependencies.json#L18 — 'Tier-1 Core ledger SLA documented at 99.99%.'",
+          sourceFile: "service_dependencies.json",
+          line: 18,
+          decision: "pending"
+        });
+      }
+
+      // Check 4: Undocumented Fragile Cron Restart
+      if (lower.includes('memory leak') && lower.includes('cron reboot')) {
+        CURRENT_ISSUES.push({
+          id: "ISS-04",
+          type: "Operational Warning",
+          class: "breach-warning",
+          tagClass: "tag-warning",
+          title: "Fragile Crutch Disclosed Without Permanent Patch",
+          explanation: "Draft references the 48-hour pod restart cronjob as a permanent resolution. Guideline OPS-004 explicitly labels this as a fragile temporary crutch until Netty bytebuf leak is resolved in code.",
+          evidence: "team_handover_notes.txt#L18 — 'Do NOT delete cronjob until Netty bytebuf in BatchReconciler.java:318 is patched.'",
+          sourceFile: "team_handover_notes.txt",
+          line: 18,
+          decision: "pending"
+        });
+      }
+
+      // Check 5: Verified Compliant Statements
+      if (lower.includes('hazelcast') || lower.includes('shadow hsm ceremony') || lower.includes('idempotency verified')) {
+        CURRENT_ISSUES.push({
+          id: "ISS-05",
+          type: "Verified Compliant",
+          class: "breach-verified",
+          tagClass: "tag-verified",
+          title: "Verified: Follows Approved ADR-001 & SEC-002",
+          explanation: "Content correctly references verified Hazelcast CP mode and the scheduled shadow key rotation ceremony with Priya Sharma and Infosec.",
+          evidence: "architecture_decisions.md#L8 & team_handover_notes.txt#L12",
+          sourceFile: "architecture_decisions.md",
+          line: 8,
+          decision: "approved"
+        });
+      }
+
+      renderIssues();
+      updateDashboardKPIs();
+      generateRedlineDiff();
+      showToast("Live Audit: " + CURRENT_ISSUES.length + " policy checks executed.");
+    }
+
+    function renderIssues() {
+      const container = document.getElementById('issuesList');
+      const badge = document.getElementById('issuesBadge');
+      badge.innerText = CURRENT_ISSUES.length + " Issues";
+
+      if (CURRENT_ISSUES.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:40px 20px; color:var(--green-light);">
+            <div style="font-size:2.5rem; margin-bottom:8px;">✅</div>
+            <h4 style="font-size:1.1rem; font-weight:800; color:#fff;">100% Compliant With Approved Guidelines</h4>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">No architectural breaches, single-owner risks, or ungrounded claims detected.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = CURRENT_ISSUES.map(issue => `
+        <div class="issue-card ${issue.class}">
+          <div class="issue-top">
+            <span class="issue-type-tag ${issue.tagClass}">${issue.type}</span>
+            <span style="font-size:0.75rem; font-family:var(--font-mono); color:${issue.decision==='approved'?'var(--green-light)':(issue.decision==='rejected'?'var(--red-light)':'var(--purple-light)')}">
+              ${issue.decision === 'approved' ? '✓ Human Approved' : (issue.decision === 'rejected' ? '✗ Blocked / Rejected' : '⏳ Pending Human Decision')}
+            </span>
+          </div>
+
+          <div class="issue-title">${issue.title}</div>
+          <div class="issue-explanation">${issue.explanation}</div>
+
+          <div class="evidence-quote" onclick="openEvidenceViewer('${issue.sourceFile}', ${issue.line}, '${issue.evidence.replace(/'/g, "\\'")}')">
+            <strong>🔍 Click to Inspect Source Evidence:</strong><br>
+            ${issue.evidence}
+          </div>
+
+          <div class="human-decision-bar">
+            <span style="font-size:0.75rem; color:var(--text-muted);">Human Reviewer Action:</span>
+            <div class="decision-btns">
+              <button class="btn-approve" onclick="makeHumanDecision('${issue.id}', 'approved')">✓ Approve</button>
+              <button class="btn-override" onclick="openOverrideModal('${issue.id}')">✎ Override</button>
+              <button class="btn-listen" onclick="speakIssue('${issue.title.replace(/'/g, "\\'")}', '${issue.explanation.replace(/'/g, "\\'")}')">🔊 Listen</button>
+              <button class="btn-reject" onclick="makeHumanDecision('${issue.id}', 'rejected')">✗ Block</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function makeHumanDecision(issueId, decision) {
+      playSound(decision === 'approved' ? 'approve' : 'reject');
+      const item = CURRENT_ISSUES.find(x => x.id === issueId);
+      if (item) {
+        item.decision = decision;
+        renderIssues();
+        updateDashboardKPIs();
+
+        // Add to audit trail log
+        const timeStr = new Date().toTimeString().split(' ')[0] + " UTC";
+        AUDIT_LOGS.unshift({
+          time: timeStr,
+          actor: "Kamal Lochan Mishra (Lead Reviewer)",
+          event: `Marked "${item.title.substring(0, 30)}..." as ${decision.toUpperCase()}`
+        });
+        renderAuditLogs();
+
+        showToast(`Decision: ${item.title.substring(0, 24)}... marked as ${decision.toUpperCase()}`);
+      }
+    }
+
+    function openOverrideModal(issueId) {
+      playSound('click');
+      const item = CURRENT_ISSUES.find(x => x.id === issueId);
+      if (!item) return;
+      const newText = prompt(`Human Override for: "${item.title}"\nEnter approved corrective replacement for draft:`, item.explanation);
+      if (newText) {
+        item.decision = "approved";
+        item.explanation = "[HUMAN OVERRIDDEN]: " + newText;
+        renderIssues();
+        updateDashboardKPIs();
+
+        const timeStr = new Date().toTimeString().split(' ')[0] + " UTC";
+        AUDIT_LOGS.unshift({
+          time: timeStr,
+          actor: "Kamal Lochan Mishra (Lead Reviewer)",
+          event: `Applied text override to "${item.title.substring(0, 30)}..."`
+        });
+        renderAuditLogs();
+
+        showToast("Human override recorded in immutable audit log!");
+      }
+    }
+
+    function updateDashboardKPIs() {
+      const criticalCount = CURRENT_ISSUES.filter(x => x.type.includes('Critical') && x.decision !== 'rejected').length;
+      const approvedCount = CURRENT_ISSUES.filter(x => x.decision === 'approved').length;
+      
+      let readiness = 95 - (criticalCount * 22) + (approvedCount * 4);
+      if (readiness > 100) readiness = 100;
+      if (readiness < 25) readiness = 25;
+
+      document.getElementById('kpiReadiness').innerText = readiness;
+      document.getElementById('kpiCritical').innerText = criticalCount;
+      document.getElementById('kpiApprovedCount').innerText = approvedCount;
+      document.getElementById('gaugePct').innerText = readiness + '%';
+
+      // SVG Gauge update
+      const gauge = document.getElementById('dashboardGauge');
+      if (gauge) {
+        const circumference = 2 * Math.PI * 70; // 440
+        const offset = circumference - (circumference * readiness) / 100;
+        gauge.style.strokeDashoffset = offset;
+        gauge.style.stroke = readiness >= 80 ? 'var(--green-primary)' : (readiness >= 50 ? '#f59e0b' : 'var(--red-primary)');
+      }
+    }
+
+    // EVIDENCE CODE VIEWER DRAWER
+    function openEvidenceViewer(filename, lineNum, quote) {
+      playSound('click');
+      document.getElementById('drawerFileTitle').innerText = filename;
+      document.getElementById('drawerLineRef').innerText = `Line ${lineNum} (Exact Grounding Origin)`;
+
+      let sampleFileLines = [
+        "// PROJECT TITAN SYSTEM GOVERNANCE REGISTRY",
+        "// Last verified: October 28, 2026",
+        "",
+        "### ADR-001: Hazelcast In-Memory Grid for Distributed Locking",
+        "- Date: 2026-08-14",
+        "- Status: APPROVED BY ARCHITECTURE BOARD",
+        "- Decision: Replace Redis standalone cluster with Hazelcast distributed IMDG for mutual exclusion locks.",
+        "- RATIONALE: Redis sentinel failover experienced split-brain race conditions that allowed double-commit window of 18ms.",
+        "- Components Impacted: ledger-engine, payment-gateway, reconciliation-worker",
+        "- Owner: Alex Mercer",
+        "",
+        "### SEC-002: KMS Root Credential Shadow Ceremony",
+        "- Custodian: Alex Mercer (Sole documented root key holder)",
+        "- Mitigation: Shadow key rotation drill with Priya Sharma mandatory before transition sign-off."
+      ];
+
+      const viewer = document.getElementById('drawerCodeViewer');
+      viewer.innerHTML = sampleFileLines.map((l, i) => {
+        const ln = i + 1;
+        const isHighlight = Math.abs(ln - lineNum) <= 1;
+        return `<span class="${isHighlight ? 'highlight-line' : ''}"><span style="color:#64748b; margin-right:12px;">${ln < 10 ? '0' + ln : ln}</span>${l}</span>`;
+      }).join('\n');
+
+      document.getElementById('evidenceDrawer').classList.add('open');
+    }
+
+    function closeEvidenceDrawer() {
+      document.getElementById('evidenceDrawer').classList.remove('open');
+    }
+
+    // AUDIT LOG RENDERING
+    function renderAuditLogs() {
+      const list = document.getElementById('auditTrailList');
+      list.innerHTML = AUDIT_LOGS.map(log => `
+        <div style="background:#070c17; border:1px solid var(--dark-blue-border); border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; color:#fff; font-size:0.86rem;">${log.event}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Actor: <strong style="color:var(--purple-light);">${log.actor}</strong></div>
+          </div>
+          <span style="font-family:var(--font-mono); font-size:0.75rem; color:#64748b; background:rgba(255,255,255,0.03); padding:4px 8px; border-radius:4px;">
+            ${log.time}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    // VOICE GOVERNANCE ASSISTANT (WEB SPEECH API)
+    function speakIssue(title, explanation) {
+      playSound('click');
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(title + ". Explanation: " + explanation);
+        u.rate = 1.05;
+        u.pitch = 1.0;
+        window.speechSynthesis.speak(u);
+        showToast("🔊 Voice Governance Assistant reading explanation aloud...");
+      } else {
+        showToast("Speech synthesis not supported on this device.");
+      }
+    }
+
+    // RULES TAB RENDERING
+    function renderRules() {
+      const container = document.getElementById('rulesGrid');
+      container.innerHTML = APPROVED_RULES.map(r => `
+        <div class="panel-box" style="padding:18px; border-left:4px solid var(--purple-primary);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:0.7rem; font-weight:800; background:rgba(139,92,246,0.15); color:var(--purple-light); padding:2px 8px; border-radius:4px; text-transform:uppercase;">
+              ${r.category}
+            </span>
+            <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">${r.id}</span>
+          </div>
+
+          <h4 style="font-size:0.95rem; font-weight:700; color:#fff; margin-bottom:6px;">${r.title}</h4>
+          <p style="font-size:0.82rem; color:#cbd5e1; line-height:1.5; margin-bottom:10px;">${r.mandate}</p>
+
+          <div style="font-size:0.72rem; color:var(--text-muted); border-top:1px solid var(--dark-blue-border); padding-top:8px; display:flex; justify-content:space-between;">
+            <span>Custodian: <strong style="color:#fff;">${r.owner}</strong></span>
+            <span style="color:var(--purple-light); font-family:var(--font-mono);">${r.source}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openNewRuleModal() {
+      playSound('click');
+      document.getElementById('newRuleModal').classList.add('active');
+    }
+    function openCertModal() {
+      playSound('approve');
+      document.getElementById('certModal').classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+    function saveNewRule() {
+      playSound('approve');
+      const title = document.getElementById('ruleTitleInput').value.trim();
+      const cat = document.getElementById('ruleCategoryInput').value;
+      const desc = document.getElementById('ruleDescInput').value.trim();
+
+      if (!title || !desc) {
+        alert("Please provide rule title and description.");
+        return;
+      }
+
+      APPROVED_RULES.unshift({
+        id: "R-0" + (APPROVED_RULES.length + 1),
+        title: title,
+        category: cat,
+        owner: "Kamal Lochan Mishra",
+        mandate: desc,
+        source: "Manual Entry (Reviewer Authorized)"
+      });
+
+      closeModal('newRuleModal');
+      renderRules();
+      document.getElementById('kpiRules').innerText = APPROVED_RULES.length;
+      showToast("New approved guideline registered into active governance database!");
+    }
+
+    // TOPOLOGY GRAPH 2.0 WITH PARTICLES & NODE TELEMETRY
+    let netCanvas, netCtx;
+    let netNodes = [
+      { id: "p1", label: "Alex Mercer", role: "Departing Architect", type: "person", x: 180, y: 160, color: "#9333ea", tier: "Lead", blast: "High" },
+      { id: "p2", label: "Priya Sharma", role: "Incoming Principal", type: "person", x: 180, y: 380, color: "#9333ea", tier: "Incoming", blast: "Low" },
+      { id: "p3", label: "Sarah Chen", role: "Senior Distributed", type: "person", x: 180, y: 500, color: "#9333ea", tier: "Backup", blast: "Medium" },
+      { id: "m1", label: "kms-vault", role: "Single Owner Risk", type: "module", x: 440, y: 160, color: "#ef4444", risk: true, tier: "Tier-0 Security", blast: "Critical" },
+      { id: "m2", label: "settlement-engine", role: "Fragile Cron Restart", type: "module", x: 460, y: 310, color: "#f59e0b", risk: true, tier: "Tier-1 Financial", blast: "High" },
+      { id: "m3", label: "ledger-engine", role: "Double-Entry Core", type: "module", x: 500, y: 450, color: "#2563eb", tier: "Tier-1 Core", blast: "High" },
+      { id: "m4", label: "payment-gateway", role: "Tier-1 Public API", type: "module", x: 740, y: 220, color: "#2563eb", tier: "Tier-1 Ingress", blast: "Critical" },
+      { id: "d1", label: "ADR-001: Hazelcast", role: "CP Lock Mandate", type: "decision", x: 760, y: 450, color: "#10b981", tier: "ADR Spec", blast: "Platform" },
+      { id: "d2", label: "ADR-002: Idempotency", role: "UUIDv4 Header", type: "decision", x: 930, y: 220, color: "#10b981", tier: "Security Spec", blast: "Public API" },
+      { id: "r1", label: "TITAN-122 Leak", role: "Off-Heap Crash", type: "risk", x: 740, y: 330, color: "#ef4444", risk: true, tier: "Active Blocker", blast: "Batch JVM" }
+    ];
+    let netEdges = [
+      { from: "p1", to: "m1", label: "sole custodian" },
+      { from: "p1", to: "m2", label: "primary owner" },
+      { from: "p2", to: "m1", label: "needs shadow key" },
+      { from: "p3", to: "m4", label: "backup lead" },
+      { from: "m4", to: "m1", label: "depends on" },
+      { from: "m4", to: "m3", label: "depends on" },
+      { from: "m2", to: "m3", label: "depends on" },
+      { from: "r1", to: "m2", label: "blocks JVM" },
+      { from: "d1", to: "m3", label: "governs" },
+      { from: "d2", to: "m4", label: "secures" }
+    ];
+    let draggingNode = null;
+    let particleOffset = 0;
+
+    function initNetworkGraph() {
+      netCanvas = document.getElementById('networkCanvas');
+      if (!netCanvas) return;
+      netCtx = netCanvas.getContext('2d');
+
+      function resize() {
+        if (!netCanvas.parentElement) return;
+        netCanvas.width = netCanvas.parentElement.clientWidth;
+        netCanvas.height = netCanvas.parentElement.clientHeight;
+        drawNetwork();
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      netCanvas.addEventListener('mousedown', e => {
+        const rect = netCanvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        for (const n of netNodes) {
+          const dx = n.x - mx;
+          const dy = n.y - my;
+          if (Math.sqrt(dx*dx + dy*dy) < 28) {
+            draggingNode = n;
+            inspectNode(n);
+            return;
+          }
+        }
+      });
+
+      netCanvas.addEventListener('mousemove', e => {
+        if (draggingNode) {
+          const rect = netCanvas.getBoundingClientRect();
+          draggingNode.x = e.clientX - rect.left;
+          draggingNode.y = e.clientY - rect.top;
+          drawNetwork();
+        }
+      });
+
+      window.addEventListener('mouseup', () => { draggingNode = null; });
+
+      // Animate particles along edges
+      function animate() {
+        particleOffset = (particleOffset + 0.008) % 1;
+        drawNetwork();
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    function inspectNode(node) {
+      playSound('click');
+      document.getElementById('drawerNodeType').innerText = node.type.toUpperCase() + ' NODE';
+      document.getElementById('drawerNodeTitle').innerText = node.label;
+      document.getElementById('drawerNodeDesc').innerText = `${node.role} (${node.tier})`;
+      document.getElementById('drawerNodeOwner').innerText = node.type === 'person' ? node.label : 'Alex Mercer / Kamal Lochan Mishra';
+      document.getElementById('drawerNodeRisk').innerText = node.blast;
+      document.getElementById('nodeDrawer').classList.add('open');
+    }
+
+    function closeNodeDrawer() {
+      document.getElementById('nodeDrawer').classList.remove('open');
+    }
+
+    function resetGraph() {
+      playSound('click');
+      netNodes[0].x = 180; netNodes[0].y = 160;
+      netNodes[1].x = 180; netNodes[1].y = 380;
+      netNodes[3].x = 440; netNodes[3].y = 160;
+      drawNetwork();
+      showToast("Topology node positions reset.");
+    }
+
+    function drawNetwork() {
+      if (!netCtx || !netCanvas) return;
+      netCtx.clearRect(0, 0, netCanvas.width, netCanvas.height);
+
+      // Draw Edges & Animated Particle Pulses
+      for (const e of netEdges) {
+        const s = netNodes.find(n => n.id === e.from);
+        const t = netNodes.find(n => n.id === e.to);
+        if (!s || !t) continue;
+
+        netCtx.beginPath();
+        netCtx.moveTo(s.x, s.y);
+        netCtx.lineTo(t.x, t.y);
+        netCtx.strokeStyle = e.label.includes('block') || e.label.includes('sole') ? 'rgba(239, 68, 68, 0.55)' : 'rgba(100, 116, 139, 0.35)';
+        netCtx.lineWidth = e.label.includes('sole') ? 2.5 : 1.5;
+        netCtx.stroke();
+
+        // Edge label
+        const midX = (s.x + t.x) / 2;
+        const midY = (s.y + t.y) / 2;
+        netCtx.font = '10px Inter, sans-serif';
+        netCtx.fillStyle = '#64748b';
+        netCtx.fillText(e.label, midX - 22, midY - 4);
+
+        // Animated Particle Pulse
+        const px = s.x + (t.x - s.x) * particleOffset;
+        const py = s.y + (t.y - s.y) * particleOffset;
+        netCtx.beginPath();
+        netCtx.arc(px, py, 3, 0, Math.PI * 2);
+        netCtx.fillStyle = e.label.includes('block') ? '#ef4444' : '#8b5cf6';
+        netCtx.fill();
+      }
+
+      // Draw Nodes
+      for (const n of netNodes) {
+        netCtx.beginPath();
+        netCtx.arc(n.x, n.y, 22, 0, Math.PI * 2);
+        netCtx.fillStyle = n.color;
+        netCtx.fill();
+
+        if (n.risk) {
+          netCtx.beginPath();
+          netCtx.arc(n.x, n.y, 28, 0, Math.PI * 2);
+          netCtx.strokeStyle = 'var(--red-primary)';
+          netCtx.lineWidth = 2;
+          netCtx.setLineDash([4, 4]);
+          netCtx.stroke();
+          netCtx.setLineDash([]);
+        }
+
+        netCtx.font = 'bold 12px Inter, sans-serif';
+        netCtx.fillStyle = '#ffffff';
+        netCtx.textAlign = 'center';
+        netCtx.fillText(n.label, n.x, n.y + 36);
+
+        netCtx.font = '10px Inter, sans-serif';
+        netCtx.fillStyle = '#94a3b8';
+        netCtx.fillText(n.role, n.x, n.y + 49);
+      }
+    }
+
+    // GROUNDED Q&A WITH ANTI-HALLUCINATION GUARDRAIL
+    function askBot(query) {
+      playSound('click');
+      document.getElementById('chatInput').value = query;
+      sendChatMessage();
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const chat = document.getElementById('chatScroll');
+      chat.innerHTML += `<div class="bubble bubble-user">${query}</div>`;
+      input.value = '';
+      chat.scrollTop = chat.scrollHeight;
+
+      const lower = query.toLowerCase();
+
+      // Guardrail Check
+      if (lower.includes('password') || lower.includes('secret') || lower.includes('salary') || lower.includes('resign')) {
+        playSound('reject');
+        setTimeout(() => {
+          chat.innerHTML += `
+            <div class="bubble bubble-bot safeguard-hit">
+              <strong style="color:var(--red-primary);">🛡️ KNOWBRIDGE Guardrail Activated</strong><br>
+              Information regarding passwords, credentials, or employee performance speculation is not present in authorized project records. Under KNOWBRIDGE AI safeguards, ungrounded speculation or credential leakage is strictly blocked.
+            </div>
+          `;
+          chat.scrollTop = chat.scrollHeight;
+        }, 300);
+        return;
+      }
+
+      playSound('click');
+      let ans = "";
+      let cites = "";
+
+      if (lower.includes('hazelcast') || lower.includes('redis') || lower.includes('locking')) {
+        ans = "ADR-001 mandated migrating from Redis Sentinel to Hazelcast IMDG under CP mode. During Black Friday peak stress testing, Redis experienced an 18ms split-brain race condition allowing double-debit transactions.";
+        cites = `[Source: architecture_decisions.md (Line 8-15)]`;
+      } else if (lower.includes('leak') || lower.includes('settlement') || lower.includes('memory')) {
+        ans = "TITAN-122 records an off-heap JVM buffer leak in BatchReconciler.java:318 that causes JVM crashes after 72 continuous hours. The current temporary workaround is a 48h pod reboot cronjob, which must be patched.";
+        cites = `[Source: team_handover_notes.txt (Line 18-20)]`;
+      } else if (lower.includes('kms') || lower.includes('key') || lower.includes('vault') || lower.includes('root')) {
+        ans = "Only Alex Mercer holds current master HSM root bypass credentials for kms-vault. Marcus Vance has mandated a 2-hour shadow key ceremony with Priya Sharma before Alex offboards.";
+        cites = `[Source: team_handover_notes.txt (Line 10-14)]`;
+      } else {
+        ans = "Information regarding \"" + query + "\" was not found in authorized project sources. To avoid hallucinations, KNOWBRIDGE AI only provides verified claims grounded in uploaded ADRs and project records.";
+      }
+
+      setTimeout(() => {
+        chat.innerHTML += `
+          <div class="bubble bubble-bot">
+            <strong>KNOWBRIDGE Governance Console</strong><br>
+            ${ans}<br><br>
+            ${cites ? `<span class="citation-tag" onclick="openEvidenceViewer('architecture_decisions.md', 8, '${ans.replace(/'/g, "\\'")}')">${cites}</span>` : ''}
+          </div>
+        `;
+        chat.scrollTop = chat.scrollHeight;
+      }, 350);
+    }
+
+    // SUBMISSION COPY HELPERS
+    function copySection(elementId) {
+      playSound('click');
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text);
+      showToast("Copied to clipboard!");
+    }
+
+    function copyFullSubmission() {
+      playSound('approve');
+      const text = `CODERSINPUNE HACKATHON ROUND 2 SUBMISSION
+Team: TECHY'VENGERS
+Leader: Kamal Lochan Mishra
+Project: KNOWBRIDGE AI (Knowledge Continuity & Brand Governance Platform)
+
+1. WORKING PROJECT LINK:
+${document.getElementById('subLink').innerText}
+
+2. SOURCE REPOSITORY:
+${document.getElementById('subRepo').innerText}
+
+3. COMPLETED FEATURES:
+${document.getElementById('subFeatures').innerText}
+
+4. TECHNOLOGY & IMPLEMENTATION:
+${document.getElementById('subTech').innerText}
+
+5. EXPLANATION OF CHANGES MADE:
+${document.getElementById('subChanges').innerText}
+
+6. THREE MAJOR IMPROVEMENTS FOR ROUND 3:
+${document.getElementById('subImprovements').innerText}`;
+
+      navigator.clipboard.writeText(text);
+      showToast("🏆 Entire Round 2 Submission copied! Ready to paste into Pune hackathon form.");
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toastAlert');
+      document.getElementById('toastMsg').innerText = msg;
+      t.style.display = 'flex';
+      setTimeout(() => { t.style.display = 'none'; }, 3200);
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+KNOWBRIDGE TRANSITION MEMORANDUM
+Project: Titan Core Payments & Ledger Gateway
+Departing Lead: Alex Mercer (Staff Systems Architect)
+Transition Target: Priya Sharma (Incoming Principal Engineer)
+Manager: Marcus Vance (Director of Engineering)
+Date: November 3, 2026
+
+1. CRITICAL SINGLE POINTS OF FAILURE & OWNERSHIP
+- I am currently the single documented owner for 'kms-vault' and 'settlement-engine'.
+- There is NO secondary or backup engineer cross-trained on the HSM KMS master rotation procedure.
+- If I leave without Priya executing a shadow key rotation drill, the PCI-DSS annual audit in December will fail.
+- Action Needed: Marcus must formally schedule a 2-hour key ceremony with Priya and Infosec before my final day.
+
+2. FRAGILE WORKAROUNDS & UNRESOLVED BLOCKERS
+- In 'settlement-engine', we have an unresolved off-heap memory leak (TITAN-122).
+- The current temporary workaround is a Kubernetes cronjob that forces a rolling restart of pods every 48 hours at 03:00 AM UTC.
+- This is fragile! Do NOT delete that cronjob until the Netty bytebuf leak in `BatchReconciler.java:318` is patched.
+- Cloudflare TLS 1.3 handshake failures: Some Brazilian fintech merchants were unable to complete handshakes. We pinned ingress to TLS 1.2 minimum.
+
+3. UNMAPPED THIRD-PARTY DEPENDENCIES
+- We depend on vendor library 'FinLedger-Core v4.2' for European SEPA format parsing.
+- WARNING: Our enterprise license expires in January 2027. We do not have an active vendor support agreement for v5.0 migration.
+- Priya should contact Procurement (contact: procurement@enterprise.internal) to renew or commission an open-source replacement.
+
+4. NEXT IMMEDIATE STEPS FOR PRIYA
+- Day 1-3: Request IAM role `payments-prod-breakglass` and test staging access.
+- Day 4: Pair with me on the settlement engine restart procedures.
+- Day 5: Review Kafka partition distribution with Sarah Chen.

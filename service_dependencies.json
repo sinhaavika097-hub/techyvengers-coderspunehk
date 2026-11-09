@@ -1,0 +1,61 @@
+{
+  "system": "Titan Core Payments Ecosystem",
+  "version": "2.4.0",
+  "export_date": "2026-11-01T12:00:00Z",
+  "services": [
+    {
+      "name": "payment-gateway",
+      "tier": "Tier-1 Mission Critical",
+      "owner": "Alex Mercer",
+      "backup_owner": "Sarah Chen",
+      "dependencies": ["kms-vault", "ledger-engine", "api-gateway"],
+      "health_sla": "99.995%",
+      "notes": "Public entrypoint for credit card and UPI charges"
+    },
+    {
+      "name": "kms-vault",
+      "tier": "Tier-0 Security Critical",
+      "owner": "Alex Mercer",
+      "backup_owner": null,
+      "dependencies": ["aws-hsm-module"],
+      "health_sla": "99.999%",
+      "notes": "Single point of failure. No backup owner assigned. Holds encryption keys."
+    },
+    {
+      "name": "settlement-engine",
+      "tier": "Tier-1 Financial",
+      "owner": "Alex Mercer",
+      "backup_owner": null,
+      "dependencies": ["ledger-engine", "db-cluster", "finledger-core-lib"],
+      "health_sla": "99.9%",
+      "notes": "Batch reconciler. Fragile memory restart workaround active."
+    },
+    {
+      "name": "ledger-engine",
+      "tier": "Tier-1 Core",
+      "owner": "Alex Mercer",
+      "backup_owner": "Sarah Chen",
+      "dependencies": ["db-cluster", "event-bus"],
+      "health_sla": "99.99%",
+      "notes": "Double-entry bookkeeping journal service."
+    },
+    {
+      "name": "event-bus",
+      "tier": "Tier-2 Infrastructure",
+      "owner": "Sarah Chen",
+      "backup_owner": "DevOps OnCall",
+      "dependencies": ["kafka-cluster"],
+      "health_sla": "99.95%",
+      "notes": "Kafka topic ingestion with consumer lag monitoring."
+    },
+    {
+      "name": "ach-clearinghouse-bridge",
+      "tier": "Tier-2 Integration",
+      "owner": "Unconfirmed",
+      "backup_owner": null,
+      "dependencies": ["external-clearinghouse-api"],
+      "health_sla": "99.5%",
+      "notes": "Mandated ISO 20022 migration pending signoff."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+TaskID,Title,Owner,Status,Priority,Category,Component,Description
+TITAN-101,Implement zero-downtime database failover drills,Alex Mercer,Blocked,High,Database,db-cluster,"Blocked pending SecOps approval for staging VPC peering. DRI: Alex Mercer."
+TITAN-102,Rotate KMS encryption master keys for PCI-DSS audit,Alex Mercer,Open,High,Security,kms-vault,"Annual key rotation window expires Nov 18. CRITICAL: Only Alex Mercer holds current master HSM root unlock password!"
+TITAN-104,Audit Kafka consumer group lag on ledger events,Sarah Chen,Open,Medium,Streaming,event-bus,"Lag increases to 45k records at 17:00 UTC daily. Sarah has tuning PR #412 awaiting review."
+TITAN-108,Implement exponential jitter backoff for merchant webhooks,Unconfirmed,Open,Low,Integration,notification-svc,"Webhook delivery times out under rate limits. Needs assignment to incoming engineer."
+TITAN-110,Benchmark multi-region disaster recovery replication latency,Alex Mercer,Completed,High,Infrastructure,dr-sync,"Replication latency verified at 84ms across US-East and EU-Central regions."
+TITAN-115,Deprecate TLS 1.0/1.1 protocols on legacy reverse proxy,Sarah Chen,Completed,Medium,Security,api-gateway,"Deprecated without downtime. All active merchants upgraded to TLS 1.2 or 1.3."
+TITAN-122,Resolve memory leak in settlement reconciler batch process,Alex Mercer,Blocked,High,Worker,settlement-engine,"Off-heap buffer leak crashes JVM after 72 hours of continuous batch execution."
